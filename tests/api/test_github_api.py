@@ -28,3 +28,27 @@ def test_repo_cannot_be_found(github_api):
 def test_repo_with_single_char_can_be_found(github_api):
     r = github_api.search_repo('s')
     assert r['total_count'] != 0
+
+@pytest.mark.api
+def test_commit_list_not_empty(github_api):
+    r = github_api.list_commits('MariiaShemetovaQA', 'mariiashemetovaua')
+    assert len(r) > 0
+
+@pytest.mark.api
+def test_commit_details_are_correct(github_api):
+    r = github_api.list_commits('MariiaShemetovaQA', 'mariiashemetovaua')
+    commit = r[0]
+    assert commit['commit']['author']['name'] == 'Mariia Shemetova'
+    assert commit['commit']['verification']['verified'] == False
+
+@pytest.mark.api
+def test_emojis_list(github_api):
+    r = github_api.emojis()
+    print (r)
+
+@pytest.mark.api
+def test_emojis_total_count(github_api):
+    r = github_api.emojis()
+    total_count = len(r)
+    print (total_count)
+    assert total_count > 0 
