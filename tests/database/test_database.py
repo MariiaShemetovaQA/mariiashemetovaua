@@ -61,3 +61,44 @@ def test_detailed_orders():
     assert orders[0][2] == 'солодка вода'
     assert orders[0][3] == 'з цукром'
 
+@pytest.mark.database
+def test_table_schema():
+    db = Database()
+    schema = db.get_table_schema('customers')
+    print(schema)
+
+@pytest.mark.database
+def test_add_new_customer():
+    db = Database()
+    db.add_new_customer(2, 'Mariia', 'Parallelweg 1', 'Noordwijk', 'Netherlands')
+    customers = db.get_all_users()
+    print(customers)
+
+@pytest.mark.database
+def test_add_random_customer():
+    db = Database()
+    db.add_random_customer()
+    customers = db.get_all_users()
+    assert len(customers) > 0
+    print(customers[-1])
+
+@pytest.mark.database
+def test_error_message_for_unsupported_data_type():
+    db = Database()
+    with pytest.raises(ValueError) as excinfo:
+        db.add_only_name_to_customers(True)
+    assert "Name must be a string" in str(excinfo.value)
+    print(excinfo.value)
+
+@pytest.mark.database
+def test_get_customers_with_any_empty_field():
+    db = Database()
+    results = db.get_customers_with_empty_field()
+    assert len(results) > 0
+    for result in results:
+        assert (result[0] is None or
+                result[1] is None or
+                result[2] is None or
+                result[3] is None or
+                result[4] is None)
+    print(results)            
